@@ -35,6 +35,16 @@ object DateTimeUtil {
         return DAY_IN_WEEK[day]
     }
 
+    fun getTimeFromMinutes(minutes: Int): String {
+        val hours = minutes / 60
+        val minute = minutes - hours * 60
+        return if (hours <= 12) {
+            "${if (hours >= 10) hours else "0$hours"}:${if (minute >= 10) minute else "0$minute"} $AM"
+        } else {
+            "${if (hours - 12 >= 10) hours - 12 else "0${hours - 12}"}:${if (minute >= 10) minute else "0$minute"} $PM"
+        }
+    }
+
     fun getTimeMinutesFromSecond(timeSecond: Long): Int {
         val time = Calendar.getInstance()
         time.time = Date(timeSecond * 1000)

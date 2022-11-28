@@ -7,4 +7,7 @@
     <string name="close">Close</string>
     <string name="fail_title">Oops!</string>
     <string name="fail_mess">Something wrong, please try again!</string>
+    <string name="day_of_week">Day of week</string>
+    <string name="open_time">Open time</string>
+    <string name="close_time">Close time</string>
 </resources>

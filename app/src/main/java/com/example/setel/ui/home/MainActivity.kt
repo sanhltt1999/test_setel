@@ -1,20 +1,23 @@
 package com.example.setel.ui.home
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.setel.R
 import com.example.setel.databinding.ActivityMainBinding
 import com.example.setel.ui.dialog.ErrorDialog
 import com.example.setel.ui.dialog.LoadingProgress
 import com.example.setel.ui.home.adapter.RestaurantAdapter
+import com.example.setel.ui.home.model.RestaurantModel
 import com.example.setel.ui.home.viewmodel.MainViewModel
+import com.example.setel.ui.restaurantdetail.RestaurantDetailActivity
 import com.wada811.databinding.dataBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), RestaurantAdapter.OnRestaurantAdapterListener {
 
     private val viewModel by viewModels<MainViewModel>()
     private val binding: ActivityMainBinding by dataBinding()
@@ -33,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.rclRestaurant.layoutManager = LinearLayoutManager(this)
         binding.rclRestaurant.adapter = restaurantAdapter
+        restaurantAdapter.setOnItemListener(this)
 
         viewModel.getRestaurants()
 
@@ -47,5 +51,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.error.observe(this) {
             ErrorDialog().show(supportFragmentManager, ErrorDialog::class.simpleName)
         }
+    }
+
+    override fun onItemClick(item: RestaurantModel) {
+        val intent = Intent(this, RestaurantDetailActivity::class.java).apply {
+            putExtra(RestaurantDetailActivity.RESTAURANT_EXTRA, item)
+        }
+        startActivity(intent)
     }
 }

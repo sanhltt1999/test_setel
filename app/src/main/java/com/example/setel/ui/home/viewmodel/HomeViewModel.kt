@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getErrorProductUseCase: GetRestaurantsUseCase
+    private val getErrorProductUseCase: GetRestaurantsUseCase,
 ) : ViewModel() {
     private val subscription: CompositeDisposable = CompositeDisposable()
 

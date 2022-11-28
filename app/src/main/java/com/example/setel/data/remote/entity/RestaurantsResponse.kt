@@ -7,10 +7,10 @@ data class RestaurantsResponse(
     val timestamp: Long,
     val restaurants: List<RestaurantDetailResponse>,
 ) {
- fun toEntity(): Restaurants = Restaurants(
-     timestamp = timestamp,
-     restaurants = restaurants.map { it.toEntity() }
- )
+    fun toEntity(): Restaurants = Restaurants(
+        timestamp = timestamp,
+        restaurants = restaurants.map { it.toEntity() }
+    )
 }
 
 data class RestaurantDetailResponse(

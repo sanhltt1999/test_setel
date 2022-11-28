@@ -13,15 +13,15 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
-  @Provides
-  fun provideContext(application: Application): Context = application.applicationContext
+    @Provides
+    fun provideContext(application: Application): Context = application.applicationContext
 
-  @Provides
-  fun provideAppRepositoryInterface(
-    appServiceApi: ApiService
-  ): AppRepositoryInterface {
-    return AppRepository(
-      appServiceApi
-    )
-  }
+    @Provides
+    fun provideAppRepositoryInterface(
+        appServiceApi: ApiService,
+    ): AppRepositoryInterface {
+        return AppRepository(
+            appServiceApi
+        )
+    }
 }
