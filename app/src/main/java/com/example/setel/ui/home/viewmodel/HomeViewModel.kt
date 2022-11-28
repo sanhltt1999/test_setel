@@ -1,11 +1,10 @@
-package com.example.setel.ui.home
+package com.example.setel.ui.home.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.setel.data.remote.entity.RestaurantsResponse
 import com.example.setel.domain.usecases.GetRestaurantsUseCase
+import com.example.setel.ui.home.model.RestaurantModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -21,11 +20,11 @@ class MainViewModel @Inject constructor(
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
-    private val _error = MutableLiveData<Boolean>()
-    val error: LiveData<Boolean> = _error
+    private val _error = MutableLiveData<Unit>()
+    val error: LiveData<Unit> = _error
 
-    private val _errorProducts = MutableLiveData<List<RestaurantsResponse>>()
-    val errorProducts: LiveData<List<RestaurantsResponse>> = _errorProducts
+    private val _restaurants = MutableLiveData<List<RestaurantModel>>()
+    val restaurants: LiveData<List<RestaurantModel>> = _restaurants
 
     init {
         start()
@@ -38,16 +37,18 @@ class MainViewModel @Inject constructor(
         _dataLoading.value = true
     }
 
-    fun getErrorProducts() {
+    fun getRestaurants() {
         _dataLoading.value = true
         subscription.add(getErrorProductUseCase.invoke()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ elements ->
-                Log.d("Sanh Test", elements.toString())
+                _restaurants.value = elements
+                _dataLoading.value = false
             }
             ) { t: Throwable? ->
                 _dataLoading.value = false
+                _error.value = Unit
             })
     }
 

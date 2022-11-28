@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">setel</string>
+    <string name="closed">Closed</string>
+    <string name="open">Open</string>
+    <string name="restaurant">Restaurant</string>
+    <string name="operation_state">State</string>
+    <string name="close">Close</string>
+    <string name="fail_title">Oops!</string>
+    <string name="fail_mess">Something wrong, please try again!</string>
 </resources>
