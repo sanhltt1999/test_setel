@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.setel"
-        minSdk 21
+        minSdk 26
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -35,6 +35,14 @@ android {
     }
     buildFeatures {
         dataBinding true
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        dev {
+            applicationId "com.example.setel"
+            buildConfigField 'String', 'BASE_URL', '"http://setel.axzae.com/"'
+        }
     }
 }
 

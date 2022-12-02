@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.setel.R
 
@@ -31,12 +32,17 @@ class LoadingProgress : DialogFragment() {
         return CustomProgressDialog(requireContext())
     }
 
+    fun showLoadingProgress(fragment: Fragment?) {
+        fragment?.run {
+            showLoadingProgress(childFragmentManager)
+        }
+    }
+
     fun showLoadingProgress(activity: AppCompatActivity?) {
         activity?.run {
             showLoadingProgress(supportFragmentManager)
         }
     }
-
 
     private fun showLoadingProgress(fragmentManager: FragmentManager) {
         if (isAdded) return

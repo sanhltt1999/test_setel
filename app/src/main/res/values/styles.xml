@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="toolbarTitle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/primary_text_color</item>
+        <item name="android:textSize">@dimen/font_17</item>
+    </style>
+
+    <style name="descriptionTitle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/primary_text_color</item>
+        <item name="android:textSize">@dimen/font_16</item>
+    </style>
+
+    <style name="contextText">
+        <item name="android:textColor">@color/primary_text_color</item>
+        <item name="android:textSize">@dimen/font_14</item>
+    </style>
+
+    <style name="BaseToolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:elevation">0dp</item>
+        <item name="android:minHeight">46dp</item>
+        <item name="contentInsetRight">0dp</item>
+        <item name="contentInsetLeft">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
+</resources>
