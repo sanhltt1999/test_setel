@@ -1,13 +1,14 @@
 package com.example.setel.utility
 
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 object DateTimeUtil {
 
-    const val AM = "am"
-    const val PM = "pm"
+    private const val HH_MM_A = "hh:mm a"
 
-    private val DAY_IN_WEEK = mapOf(
+    val DAY_IN_WEEK = mapOf(
         2 to "Mon",
         3 to "Tue",
         4 to "Wed",
@@ -17,7 +18,7 @@ object DateTimeUtil {
         8 to "Sun"
     )
 
-    private val DATE_IN_WEEK = mapOf(
+    val DATE_IN_WEEK = mapOf(
         "Mon" to 2,
         "Tue" to 3,
         "Wed" to 4,
@@ -35,22 +36,17 @@ object DateTimeUtil {
         return DAY_IN_WEEK[day]
     }
 
-    fun getTimeFromMinutes(minutes: Int): String {
-        val hours = minutes / 60
-        val minute = minutes - hours * 60
-        return if (hours <= 12) {
-            "${if (hours >= 10) hours else "0$hours"}:${if (minute >= 10) minute else "0$minute"} $AM"
-        } else {
-            "${if (hours - 12 >= 10) hours - 12 else "0${hours - 12}"}:${if (minute >= 10) minute else "0$minute"} $PM"
-        }
+    fun convertLocalTimeToString(time: LocalTime): String {
+        return time.format(DateTimeFormatter.ofPattern(HH_MM_A)).toString()
     }
 
-    fun getTimeMinutesFromSecond(timeSecond: Long): Int {
+    fun getLocalTimeFromSecond(timeSecond: Long): LocalTime {
         val time = Calendar.getInstance()
         time.time = Date(timeSecond * 1000)
         val currentHours = time.get(Calendar.HOUR_OF_DAY)
         val currentMinutes = time.get(Calendar.MINUTE)
-        return currentHours * 60 + currentMinutes
+        val currentSecond = time.get(Calendar.SECOND)
+        return LocalTime.of(currentHours, currentMinutes, currentSecond)
     }
 
     fun getDayFromSecond(timeSecond: Long): String {
@@ -59,13 +55,14 @@ object DateTimeUtil {
         return DAY_IN_WEEK[time.get(Calendar.DAY_OF_WEEK)] ?: ""
     }
 
-    fun convertTimeToMinutes(time: String): Int {
+    fun convertStringToLocalTime(time: String): LocalTime {
         val times = time.split(" ")
         val hoursAndMinute = times.first().split(":")
-        return if (times.last() == AM) {
-            hoursAndMinute.first().toInt() * 60 + hoursAndMinute.last().toInt()
+        return if (hoursAndMinute.first().length == 1) {
+            LocalTime.parse("0$time".trim(), DateTimeFormatter.ofPattern(HH_MM_A))
         } else {
-            hoursAndMinute.first().toInt() * 60 + hoursAndMinute.last().toInt() + 12 * 60
+            LocalTime.parse(time.trim(), DateTimeFormatter.ofPattern(HH_MM_A))
+
         }
     }
 

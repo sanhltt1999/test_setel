@@ -15,8 +15,7 @@ class GetRestaurantsUseCase @Inject constructor(
         return appRepositoryInterface.getRestaurants().flatMap {
 
             val restaurants = mutableListOf<RestaurantModel>()
-
-            val totalMin = DateTimeUtil.getTimeMinutesFromSecond(it.timestamp)
+            val currentTime = DateTimeUtil.getLocalTimeFromSecond(it.timestamp)
             val currentDate = DateTimeUtil.getDayFromSecond(it.timestamp)
             it.restaurants.forEach { element ->
 
@@ -26,7 +25,7 @@ class GetRestaurantsUseCase @Inject constructor(
                     RestaurantModel(
                         name = element.name,
                         operatingHours = operatingHours,
-                        isOpenToday = operatingHours.find { operatingHour -> operatingHour.day == currentDate && totalMin in operatingHour.timeStart..operatingHour.timeClose } != null
+                        isOpenToday = operatingHours.find { operatingHour -> operatingHour.day == currentDate && currentTime > operatingHour.timeStart && currentTime < operatingHour.timeClose } != null
                     )
                 )
             }
@@ -35,12 +34,26 @@ class GetRestaurantsUseCase @Inject constructor(
         }
     }
 
+
     private fun mapToOperatingHours(time: String): List<OperatingTimeModel> {
         val operatingDays = time.split(" / ")
         val operatingTimes = mutableListOf<OperatingTimeModel>()
         operatingDays.forEach {
             operatingTimes.addAll(getOperatingTimes(it))
         }
+
+        (2..8).forEach { date ->
+            if (operatingTimes.find { it.dateOfWeek == date } == null) {
+                operatingTimes.add(OperatingTimeModel(
+                    dateOfWeek = date,
+                    day = DateTimeUtil.DAY_IN_WEEK[date] ?: "",
+
+                    ))
+            }
+        }
+
+        operatingTimes.sortBy { it.dateOfWeek }
+
         return operatingTimes
     }
 
@@ -74,13 +87,16 @@ class GetRestaurantsUseCase @Inject constructor(
         val lastDaySubStrings = time.split(", ").last().split(" ")
         val times =
             time.split(", ").last().substring(lastDaySubStrings.first().length + 1).split(" - ")
-        val timeStart = DateTimeUtil.convertTimeToMinutes(times.first())
-        val timeEnd = DateTimeUtil.convertTimeToMinutes(times.last())
+        val timeStart =
+            DateTimeUtil.convertStringToLocalTime(times.first().uppercase())
+        val timeEnd =
+            DateTimeUtil.convertStringToLocalTime(times.last().uppercase())
 
         val operatingTimes = mutableListOf<OperatingTimeModel>()
         days.forEach {
             operatingTimes.add(
                 OperatingTimeModel(
+                    dateOfWeek = DateTimeUtil.DATE_IN_WEEK[it] ?: 0,
                     day = it,
                     timeStart = timeStart,
                     timeClose = timeEnd

@@ -1,30 +1,67 @@
 package com.example.setel.ui.restaurantdetail
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.setel.R
 import com.example.setel.databinding.LayoutOperatingTimeItemBinding
-import com.example.setel.ui.home.model.OperatingTimeDiffCallback
+import com.example.setel.databinding.LayoutOperatingTimeWithStatusItemBinding
 import com.example.setel.ui.home.model.OperatingTimeModel
+import java.util.concurrent.Executors
 
-class OperatingTimeAdapter : RecyclerView.Adapter<OperatingTimeAdapter.OperatingTimeViewHolder>() {
+class OperatingTimeAdapter : ListAdapter<OperatingTimeModel, RecyclerView.ViewHolder>(
+    AsyncDifferConfig.Builder(OperatingTimeDiffCallback())
+        .setBackgroundThreadExecutor(Executors.newSingleThreadExecutor())
+        .build()
+) {
 
-    private var operatingTimes: List<OperatingTimeModel> = listOf()
+    companion object {
+        private const val OPERATING_TIME = 0
+        private const val OPERATING_TIME_WITH_STATUS = 1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OperatingTimeViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.layout_operating_time_item, parent, false)
-        return OperatingTimeViewHolder(LayoutOperatingTimeItemBinding.bind(view))
     }
 
     override fun getItemViewType(position: Int): Int {
-        return position
+        return if (getItem(position).timeClose != null) {
+            OPERATING_TIME
+        } else {
+            OPERATING_TIME_WITH_STATUS
+        }
     }
 
-    override fun getItemCount(): Int = operatingTimes.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            OPERATING_TIME -> {
+                val binding =
+                    LayoutOperatingTimeItemBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                OperatingTimeViewHolder(binding)
+            }
+            else -> {
+                val binding =
+                    LayoutOperatingTimeWithStatusItemBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                OperatingTimeWithStatusViewHolder(binding)
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val operatingTime = getItem(position)
+        when (holder.itemViewType) {
+            OPERATING_TIME -> if (holder is OperatingTimeViewHolder) holder.onBind(operatingTime)
+            else -> if (holder is OperatingTimeWithStatusViewHolder) holder.onBind(operatingTime)
+        }
+    }
+
 
     inner class OperatingTimeViewHolder(private val itemBinding: LayoutOperatingTimeItemBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
@@ -34,22 +71,31 @@ class OperatingTimeAdapter : RecyclerView.Adapter<OperatingTimeAdapter.Operating
         }
     }
 
+    inner class OperatingTimeWithStatusViewHolder(private val itemBinding: LayoutOperatingTimeWithStatusItemBinding) :
+        RecyclerView.ViewHolder(itemBinding.root) {
 
-    fun setList(operatingTimes: List<OperatingTimeModel>) {
-        if (operatingTimes.isEmpty()) return
-        val oldList = ArrayList(this.operatingTimes)
-        this.operatingTimes = operatingTimes
-        val diffCallback = OperatingTimeDiffCallback(oldList = oldList,
-            newList = operatingTimes as ArrayList<OperatingTimeModel>)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        diffResult.dispatchUpdatesTo(this)
-        notifyItemRangeChanged(0, operatingTimes.size - 1)
+        fun onBind(item: OperatingTimeModel) {
+            itemBinding.operatingTime = item
+        }
     }
 
-    override fun onBindViewHolder(
-        holder: OperatingTimeAdapter.OperatingTimeViewHolder,
-        position: Int,
-    ) {
-        holder.onBind(operatingTimes[position])
+    class OperatingTimeDiffCallback :
+        DiffUtil.ItemCallback<OperatingTimeModel>() {
+
+        override fun areItemsTheSame(
+            oldItem: OperatingTimeModel,
+            newItem: OperatingTimeModel,
+        ): Boolean {
+            return oldItem.day == newItem.day
+                    && oldItem.timeClose == newItem.timeClose
+                    && oldItem.timeStart == newItem.timeStart
+        }
+
+        override fun areContentsTheSame(
+            oldItem: OperatingTimeModel,
+            newItem: OperatingTimeModel,
+        ): Boolean {
+            return areContentsTheSame(oldItem, newItem)
+        }
     }
 }

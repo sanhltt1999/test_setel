@@ -1,5 +1,6 @@
 package com.example.setel.di
 
+import com.example.setel.BuildConfig
 import com.example.setel.data.remote.ApiService
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -23,7 +24,7 @@ class NetworkModule {
             .create()
 
         return Retrofit.Builder()
-            .baseUrl("http://setel.axzae.com/")
+            .baseUrl(BuildConfig.BASE_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

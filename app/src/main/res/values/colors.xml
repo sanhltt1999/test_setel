@@ -12,4 +12,5 @@
     <color name="background_status_close">#BAB9B9</color>
     <color name="background_status_opening">#B37FFF7F</color>
     <color name="green_dark">#12772F</color>
+    <color name="orange">#F96300</color>
 </resources>

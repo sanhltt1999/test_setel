@@ -4,8 +4,6 @@
 
     <data>
 
-        <import type="com.example.setel.utility.DateTimeUtil" />
-
         <variable
             name="operatingTime"
             type="com.example.setel.ui.home.model.OperatingTimeModel" />
@@ -36,26 +34,32 @@
                 android:layout_weight="4"
                 android:text="@{operatingTime.day}" />
 
-            <TextView
-                style="@style/contextText"
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
-                android:layout_weight="3"
-                android:text="@{DateTimeUtil.INSTANCE.convertLocalTimeToString(operatingTime.timeStart)}" />
+                android:layout_weight="6">
 
-            <TextView
-                style="@style/contextText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
-                android:layout_weight="3"
-                android:text="@{DateTimeUtil.INSTANCE.convertLocalTimeToString(operatingTime.timeClose)}" />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    app:cardBackgroundColor="@color/background_status_close"
+                    app:cardCornerRadius="32dp"
+                    app:cardElevation="0dp">
 
+                    <TextView
+                        style="@style/contextText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginVertical="2dp"
+                        android:gravity="center"
+                        android:text="@string/closed" />
+                </androidx.cardview.widget.CardView>
+
+            </FrameLayout>
         </LinearLayout>
-
     </androidx.cardview.widget.CardView>
 
 </layout>
