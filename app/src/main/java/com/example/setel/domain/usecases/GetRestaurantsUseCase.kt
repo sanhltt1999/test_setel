@@ -35,7 +35,7 @@ class GetRestaurantsUseCase @Inject constructor(
     }
 
 
-    private fun mapToOperatingHours(time: String): List<OperatingTimeModel> {
+    fun mapToOperatingHours(time: String): List<OperatingTimeModel> {
         val operatingDays = time.split(" / ")
         val operatingTimes = mutableListOf<OperatingTimeModel>()
         operatingDays.forEach {
@@ -57,7 +57,7 @@ class GetRestaurantsUseCase @Inject constructor(
         return operatingTimes
     }
 
-    private fun getDayFromOperatingHours(time: String): List<String> {
+    fun getDayFromOperatingHours(time: String): List<String> {
         val dayDetails = time.split(", ")
 
         if (dayDetails.isEmpty()) return listOf()
@@ -81,7 +81,7 @@ class GetRestaurantsUseCase @Inject constructor(
         return days
     }
 
-    private fun getOperatingTimes(time: String): List<OperatingTimeModel> {
+    fun getOperatingTimes(time: String): List<OperatingTimeModel> {
         val days = getDayFromOperatingHours(time)
 
         val lastDaySubStrings = time.split(", ").last().split(" ")
@@ -105,6 +105,5 @@ class GetRestaurantsUseCase @Inject constructor(
         }
         return operatingTimes
     }
-
 
 }
