@@ -12,7 +12,7 @@ import com.example.setel.databinding.LayoutRestaurantItemBinding
 import com.example.setel.ui.home.model.RestaurantModel
 import java.util.concurrent.Executors
 
-class RestaurantAdapter(var listener: OnRestaurantAdapterListener) :
+class RestaurantAdapter(val listener: OnRestaurantAdapterListener) :
     ListAdapter<RestaurantModel, RestaurantAdapter.RestaurantViewHolder>(
         AsyncDifferConfig.Builder(RestaurantDiffCallback())
             .setBackgroundThreadExecutor(Executors.newSingleThreadExecutor())
